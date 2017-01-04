@@ -13,12 +13,13 @@ Ranking options:-
 
  
  Implemented:-
-- Create Serpated Table for Skill and People
-- Create HibernateUtil class to create singleton sesssionfactory pattern
-- Create DAO layer pattern structure.
-- Used Manytoone mapping on Rank class to map skill ,people(subject and observer)
-- Used Hibernate Interceptor to validate the score value is between 1-10.
-- Used Hibernate Second level cahce .
-- Used Hibernate Criteria  -for geting avg and max of rank.
-- Used Transformers.aliasToBean to convert ResultSet to the CustomerDTO(RankResultMap) attributes.
+
+1. Create Serpated Table for Skill and People
+2. Create HibernateUtil class to create singleton sesssionfactory pattern
+3. Create DAO layer pattern structure.
+4. Used Manytoone mapping on Rank class to map skill ,people(subject and observer)
+5. Used Hibernate Interceptor to validate the score value is between 1-10.
+6. Used Hibernate Second level cahce .
+7. Used Hibernate Criteria  -for geting avg and max of rank.
+8. Used Transformers.aliasToBean to convert ResultSet to the CustomerDTO(RankResultMap) attributes.
  
