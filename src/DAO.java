@@ -147,15 +147,22 @@ public class DAO {
 			  session.close();
 			  return ev;
 		}
-		public static List<Rank> fetchRankbySkillid(long id) {
+		public static List<RankResultMap> fetchRankbySkillid(long id) {
 			Session session = sessionFactory.openSession();
 
 			  session.beginTransaction();
-
-			  Criteria criteria = session.createCriteria(Rank.class);
-			  criteria.add(Restrictions.eq("skill", fetchSkillByid(id)));
-			  criteria.addOrder(Order.desc("score"));
-			  List<Rank>  ev=criteria.list();
+				Criteria criteria = session.createCriteria(Rank.class);
+				 criteria.add(Restrictions.eq("skill", fetchSkillByid(id)));
+				  criteria .setProjection(Projections.projectionList()
+	                    .add(Projections.groupProperty("subject"),"subject")
+	                           .add(Projections.avg("score"),"score"));
+				  criteria.addOrder(Order.desc("score"));
+				  criteria.setResultTransformer(Transformers.aliasToBean(RankResultMap.class));
+				 
+			 
+			 
+			
+			  List<RankResultMap>  ev=criteria.list();
 			
 			  session.getTransaction().commit();
 			  session.close();
@@ -196,19 +203,21 @@ public class DAO {
 			  session.close();
 			return ranks;
 		}
-		public static List<RankResultMap> fetchTopSubRank() {
+		public static List<Object[]>  fetchTopSubRank(Long skillid) {
 			Session session = sessionFactory.openSession();
 
 			  session.beginTransaction();
-			
+			String sql="SELECT p.name,t.Subject_id ,MAX(t.rank) as TopMark "+
+                        "from ("+
+                        		"SELECT a.Subject_id,AVG(a.score) as rank "+
+                        		 "from ranks as a"+
+                        		 " where a.skill_id =:skillid group by a.Subject_id "+
+                        		") as t "+
+                        		"inner join people p on p.people_id= t.Subject_id";
+			      Query q=session.createSQLQuery(sql);
+			      q.setParameter("skillid", skillid);
 			      
-					Criteria criteria = session.createCriteria(Rank.class);
-			  criteria .setProjection(Projections.projectionList()
-                  .add(Projections.groupProperty("subject"),"subject")
-                  .add(Projections.groupProperty("skill"),"skill")
-                  .add(Projections.max("score"),"score"));
-			  criteria.setResultTransformer(Transformers.aliasToBean(RankResultMap.class));
-			  List<RankResultMap>  ranks=criteria.list();
+			List<Object[]>   ranks=q.list();
 			
 			  
 			  session.getTransaction().commit();

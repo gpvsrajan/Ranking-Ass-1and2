@@ -154,23 +154,23 @@ private void ShowAverage() {
 		
 			System.out.print("Subject Name:- "+rank.getSubject().getName()+"("+rank.getSubject().getId()+")"+"\t");
 			System.out.print("Skill :- "+rank.getSkill().getName()+"("+rank.getSkill().getId()+")"+"\t");
-			System.out.print("Score :- "+rank.getScore()+"\t"+"\n");
+			System.out.print("Avg Score :- "+rank.getScore()+"\t"+"\n");
 		}
 	 }
 }
 
 private void ShowTopper() {
-	System.out.println("Showing Topper:- Skill wise :-");
-	List<RankResultMap>  ranks=DAO.fetchTopSubRank();
+
+	Scanner input = new Scanner(System.in);
+	System.out.println("Enter the skill id which you want to find the topper and his avg score:-");
+	long id=input.nextLong();
+	List<Object[]>   ranks=DAO.fetchTopSubRank(id);
 	if(ranks==null){
 		 System.out.println("No average Rank");
 	}else{
-				
-		for (RankResultMap rank : ranks) {
-		
-			System.out.print("Subject Name:- "+rank.getSubject().getName()+"("+rank.getSubject().getId()+")"+"\t");
-			System.out.print("Skill :- "+rank.getSkill().getName()+"("+rank.getSkill().getId()+")"+"\t");
-			System.out.print("Score :- "+rank.getScore()+"\t"+"\n");
+			System.out.println(ranks);	
+		for(Object[] ob:ranks){
+			System.out.println(ob[0] +"("+ob[1]+") - Avg score is "+ob[2]);
 		}
 	 }
 	
@@ -201,15 +201,13 @@ private void sortbyskill() {
 	Scanner input = new Scanner(System.in);
 	System.out.println("Enter the skill id which you want to Sort students:-");
 	long id=input.nextLong();
-	List<Rank>  ranks=DAO.fetchRankbySkillid(id);
-	 for (Rank rank : ranks) {
-		 System.out.print("Id:- "+rank.getId()+"\t");
-		System.out.print("Observer Name:- "+rank.getObserver().getName()+"("+rank.getObserver().getId()+")"+"\t");
+	List<RankResultMap>  ranks=DAO.fetchRankbySkillid(id);
+	for (RankResultMap rank : ranks) {
+		
 		System.out.print("Subject Name:- "+rank.getSubject().getName()+"("+rank.getSubject().getId()+")"+"\t");
-		System.out.print("Skill :- "+rank.getSkill().getName()+"("+rank.getSkill().getId()+")"+"\t");
-		System.out.print("Score :- "+rank.getScore()+"\t");
-		System.out.println();
-	 }
+
+		System.out.print("Avg Score :- "+rank.getScore()+"\t"+"\n");
+	}
 }
 
 
